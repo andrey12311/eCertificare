@@ -1,0 +1,161 @@
+package com.swing;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class Examen2 extends JPanel {
+    private static String corAnswer;
+    private JLabel questionLabel;
+    private int count = 1;
+    private JButton nextButton;
+    private JButton finishButton;
+    private JCheckBox[] buttons = new JCheckBox[3];
+    private ButtonGroup group;
+    private BufferedReader br;
+    private BufferedReader br2;
+
+    public Examen2(String file_name, String file_name1) {
+        listener listener = new listener();
+        setLayout(null);
+        setSize(600, 600);
+        try {
+            br = new BufferedReader(new FileReader(file_name));
+            br2 = new BufferedReader(new FileReader(file_name1));
+
+            questionLabel = new JLabel(br.readLine());
+            questionLabel.setLocation(100, 100);
+            questionLabel.setSize(500, 23);
+            add(questionLabel);
+
+            String tmp = br2.readLine();
+            String[] rasp = tmp.split(",");
+
+            corAnswer = rasp[0];
+
+            System.out.println(corAnswer+" in constructor");
+
+            buttons[0] = new JCheckBox(rasp[0]);
+            buttons[0].setLocation(50, 200);
+            buttons[0].setSize(150, 30);
+            buttons[0].addItemListener (listener);
+            buttons[0].addActionListener(listener);
+            add(buttons[0]);
+
+            buttons[1] = new JCheckBox(rasp[1]);
+            buttons[1].setLocation(200, 200);
+            buttons[1].setSize(150, 30);
+            buttons[1].addItemListener(listener);
+            buttons[1].addActionListener(listener);
+            add(buttons[1]);
+
+
+            buttons[2] = new JCheckBox(rasp[2]);
+            buttons[2].setLocation(400, 200);
+            buttons[2].setSize(150, 30);
+            buttons[2].addItemListener( listener);
+            buttons[2].addActionListener( listener);
+            add(buttons[2]);
+
+            group = new ButtonGroup();
+            group.add(buttons[0]);
+            group.add(buttons[1]);
+            group.add(buttons[2]);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        nextButton = new JButton("Next");
+        nextButton.setSize(70, 20);
+        nextButton.setLocation(450, 500);
+        nextButton.setEnabled(false);
+        nextButton.addActionListener(listener);
+        add(nextButton);
+
+        finishButton = new JButton("Finish");
+        finishButton.setSize(70, 20);
+        finishButton.setLocation(300, 500);
+        finishButton.addActionListener( listener);
+        finishButton.setEnabled(false);
+        add(finishButton);
+    }
+
+    private class listener implements ActionListener, ItemListener {
+        String correctAnswer;
+        private int countAnswers = 0;
+        private String answer;
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == nextButton) {
+             group.clearSelection();
+                count++;
+                System.out.println("correct ans :" +this.correctAnswer+",current answ:" + this.answer);
+                if (this.answer.equals(Examen2.corAnswer) || this.answer.equals(this.correctAnswer)) {
+                    System.out.println("sal");
+                    this.countAnswers++;
+                }
+
+                try {
+                    String question = br.readLine();
+                    String[] answer = br2.readLine().split(",");
+
+                    if (question != null) {
+
+                        if (count == 5) {
+                            nextButton.setEnabled(false);
+                            finishButton.setEnabled(true);
+                        }
+                        buttons[0].setText(answer[0]);
+                        correctAnswer = answer[0];
+                        buttons[1].setText(answer[1]);
+                        buttons[2].setText(answer[2]);
+                        questionLabel.setText(question);
+
+                    }
+
+                } catch (IOException ee) {
+                    System.out.println("cv nu a mers bine aici");
+                    ee.printStackTrace();
+                }
+            } else if (e.getSource() == finishButton) {
+                if (this.answer.equals(Examen2.corAnswer) || this.answer.equals(this.correctAnswer)) {
+                    System.out.println("sal");
+                    this.countAnswers++;
+                }
+                JOptionPane.showMessageDialog(new JFrame(), "Correct answers:" + this.countAnswers,
+                        "", JOptionPane.PLAIN_MESSAGE);
+                LessonsPage lessonsPage = new LessonsPage();
+                removeAll();
+                revalidate();
+                repaint();
+                add(lessonsPage);
+            } else if (e.getSource() == buttons[0]) {
+                this.answer = buttons[0].getText();
+
+            } else if (e.getSource() == buttons[1]) {
+                this.answer = buttons[1].getText();
+
+            } else if (e.getSource() == buttons[2]) {
+                this.answer = buttons[2].getText();
+            }
+        }
+
+        @Override
+        public void itemStateChanged(ItemEvent itemEvent) {
+
+            if ((itemEvent.getSource() == buttons[0] ||
+                    itemEvent.getSource() == buttons[1] ||
+                    itemEvent.getSource() == buttons[2]) && count!=5) {
+
+                nextButton.setEnabled(true);
+            }
+        }
+    }
+}

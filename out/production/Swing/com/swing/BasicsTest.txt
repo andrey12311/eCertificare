@@ -1,0 +1,6 @@
+Choose the correct answear:
+which data type accepts true or false?
+Choose the  correct answear form:
+To execute a while loop you need a ... condition.
+Do while loops checks for the conditon .... executing statements.
+

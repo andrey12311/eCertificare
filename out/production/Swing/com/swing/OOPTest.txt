@@ -1,0 +1,5 @@
+Choose the correct form:
+In Java,is it possible to inherit attributes and methods from one class to another?
+How can we create a fully encapsulated class?
+A Java class which is a fully encapsulated class has ...
+Is encapsulation important?

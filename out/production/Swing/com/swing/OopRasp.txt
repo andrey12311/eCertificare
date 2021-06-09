@@ -1,0 +1,5 @@
+private int=5,int private=5,private=5
+yes,no,sometimes
+using private,we can't,i dont know
+all fields private,nothing,i dont know
+yes,no,sometimes

@@ -1,0 +1,5 @@
+int val=3,boolean val=3,float val=3
+boolean,float,int
+boolean val=true,float val=false,int val=true
+boolean,false,certain
+after,before,never
